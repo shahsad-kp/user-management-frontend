@@ -1,13 +1,13 @@
 import {Fragment} from "react";
 import {Navbar, UserBody} from "../components";
 
-function Homepage() {
+function HomePage() {
     return (
         <Fragment>
-            <Navbar/>
+            <Navbar page={'home'}/>
             <UserBody/>
         </Fragment>
     );
 }
 
-export default Homepage;
+export default HomePage;
