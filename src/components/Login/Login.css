@@ -1,0 +1,96 @@
+.login {
+    width: 100vw;
+    height: 100vh;
+    background-color: #a0c0e8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
+}
+
+div{
+    transition: transform 4s ease-in-out;
+}
+
+.login form{
+    border-radius: 50px;
+}
+
+.login .form{
+    width: min-content;
+    height: auto;
+    background-color: #fff;
+    padding: 40px;
+}
+
+.login .form h1{
+    font-size: 2rem;
+    font-weight: 400;
+    color: #272727;
+}
+
+.login .form input{
+    width: 400px;
+    height: 40px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    margin-top: 20px;
+}
+
+.login .form input:focus{
+    outline: none;
+}
+
+.login .form input::placeholder{
+    color: #ccc;
+}
+
+.login .buttons{
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+}
+
+.login form button{
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: #E8E9EC;
+    color: #272727;
+    font-size: 1rem;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.login form button:hover{
+    background-color: #D1D2D6;
+}
+
+.login form button:active{
+    background-color: #B9BABC;
+}
+
+.login form button[type="submit"]{
+    background-color: #2D3B55;
+    color: #fff;
+}
+
+.login form button[type='submit']:hover{
+    background-color: #1E2A3B;
+}
+
+.login form button[type='submit']:active{
+    background-color: #0F1927;
+}
+
+.error{
+    border-color: #E35869 !important;
+}
+
+.error-message{
+    color: #E35869;
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin-top: 5px;
+}
+
