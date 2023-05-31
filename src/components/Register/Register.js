@@ -23,7 +23,11 @@ function Register() {
 
     const changeUsername = (event) => {
         setUsername(event.target.value);
-        setUsernameError('');
+        if (event.target.value.length < 5) {
+            setUsernameError('Username must be at least 5 characters long');
+        } else {
+            setUsernameError('');
+        }
     }
 
     const changePassword = (event) => {
@@ -52,12 +56,11 @@ function Register() {
                 setRepeatPasswordError('Repeat password is required');
             }
         } else if (password !== repeatPassword) {
-                setRepeatPasswordError('Passwords do not match');
+            setRepeatPasswordError('Passwords do not match');
         }
     }
 
-    return (
-        <div className={'register'}>
+    return (<div className={'register'}>
             <form>
                 <div className={'form'}>
                     <h1>Register</h1>
@@ -103,8 +106,7 @@ function Register() {
                     <button type="button" onClick={() => navigator('/login/')}>Login</button>
                 </div>
             </form>
-        </div>
-    );
+        </div>);
 }
 
 export default Register;

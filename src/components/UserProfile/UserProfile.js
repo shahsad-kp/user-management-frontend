@@ -42,6 +42,16 @@ function UserProfile() {
         }
     }
 
+    const validateUsername = (event) => {
+        setUsername(event.target.value);
+        if (event.target.value !== '' && event.target.value.length < 5) {
+            setUsernameError('Username must be at least 5 characters long');
+        }
+        else{
+            setUsernameError('');
+        }
+    }
+
     return (
         <div className={'update-profile'}>
             <form>
@@ -70,7 +80,7 @@ function UserProfile() {
                         id="username"
                         placeholder={'USERNAME'}
                         value={username}
-                        onChange={event => setUsername(event.target.value)}
+                        onChange={validateUsername}
                         className={usernameError ? 'error' : ''}
                     />
                     {usernameError && <p className={'error-message'}>{usernameError}</p>}
