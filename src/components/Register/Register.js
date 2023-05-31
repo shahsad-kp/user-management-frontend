@@ -58,6 +58,9 @@ function Register() {
         } else if (password !== repeatPassword) {
             setRepeatPasswordError('Passwords do not match');
         }
+        else {
+            // TODO: Add new user to database
+        }
     }
 
     return (<div className={'register'}>

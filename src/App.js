@@ -1,8 +1,12 @@
 import './App.css';
 import {Route, Routes} from "react-router-dom"
-import {LoginPage, RegisterPage} from "./pages";
-import HomePage from "./pages/HomePage";
-import ProfilePage from "./pages/ProfilePage";
+import {
+    AdminHomePage,
+    HomePage,
+    LoginPage,
+    ProfilePage,
+    RegisterPage
+} from "./pages";
 
 function App() {
     return (
@@ -11,6 +15,7 @@ function App() {
             <Route path="/login" element={<LoginPage/>}/>
             <Route path="/register" element={<RegisterPage/>}/>
             <Route path="/profile" element={<ProfilePage/>}/>
+            <Route path="/admin" element={<AdminHomePage/>}/>
             <Route path="*" element={<div>Not Found</div>}/>
         </Routes>
     );
