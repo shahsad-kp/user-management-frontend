@@ -1,0 +1,87 @@
+.add-user {
+    width: 100vw;
+    height: 100vh;
+    background-color: #a0c0e8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.add-user .form{
+    width: min-content;
+    height: auto;
+    background-color: #fff;
+    padding: 40px;
+}
+
+.add-user .form h1{
+    font-size: 2rem;
+    font-weight: 400;
+    color: #272727;
+}
+
+.add-user .form input{
+    width: 400px;
+    height: 40px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    margin-top: 20px;
+}
+
+.add-user .form input:focus{
+    outline: none;
+}
+
+.add-user .form input::placeholder{
+    color: #ccc;
+}
+
+.add-user .buttons{
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+}
+
+.add-user form button{
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: #2D3B55;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.add-user form button:hover{
+    background-color: #1E2A3B;
+}
+
+.add-user form button:active{
+    background-color: #0F1927;
+}
+
+.error{
+    border-color: #E35869 !important;
+}
+
+.error-message{
+    color: #E35869;
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin-top: 5px;
+}
+
+.add-user input[type='file']{
+    display: none;
+}
+
+.add-user img{
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    margin-top: 20px;
+}

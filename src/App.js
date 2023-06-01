@@ -1,7 +1,7 @@
 import './App.css';
 import {Route, Routes} from "react-router-dom"
 import {
-    AdminHomePage,
+    AdminHomePage, AdminNewUserPage,
     HomePage,
     LoginPage,
     ProfilePage,
@@ -16,6 +16,7 @@ function App() {
             <Route path="/register" element={<RegisterPage/>}/>
             <Route path="/profile" element={<ProfilePage/>}/>
             <Route path="/admin" element={<AdminHomePage/>}/>
+            <Route path="/admin/new-user" element={<AdminNewUserPage/>}/>
             <Route path="*" element={<div>Not Found</div>}/>
         </Routes>
     );

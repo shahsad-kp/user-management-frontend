@@ -2,8 +2,10 @@ import './UsersList.css';
 import {useState} from "react";
 import UserCard from "../UserCard/UserCard";
 import person_add_icon from '../../Icons/person_add.svg'
+import {useNavigate} from "react-router-dom";
 
 function UsersList() {
+    const navigator = useNavigate();
     const [users, setUsers] = useState([
         {
             id: 1,
@@ -38,23 +40,12 @@ function UsersList() {
     ]);
     // TODO: Add useEffect hook to fetch users here
 
-    const addUser = () => {
-        const newUser = {
-            id: 6,
-            username: 'newuser',
-            fullName: 'New User',
-            profilePicture: 'https://i.pravatar.cc/300?img=1'
-        };
-        setUsers([...users, newUser]);
-
-        // TODO: Add POST request to add user here
-    }
 
     return (
         <div className={'users-list-body'}>
             <h1>Users</h1>
             <div className={'users-list'}>
-                <div className={'new-user'} onClick={addUser}>
+                <div className={'new-user'} onClick={() => navigator('new-user')}>
                     <img src={person_add_icon} alt={'Add new user'}/>
                 </div>
                 {users.map(user => <UserCard key={user.id} user={user}/>)}

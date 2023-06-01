@@ -2,6 +2,7 @@ import './UserCard.css'
 
 function UserCard({user}) {
     const {username, fullName, profilePicture} = user;
+
     return (
         <div className={'user-card'}>
             <img src={profilePicture} alt={username}/>
