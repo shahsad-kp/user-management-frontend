@@ -1,10 +1,16 @@
 import * as React from 'react';
 import "./Register.css"
 import {useNavigate} from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import { baseURL } from "../../api/api";
+import { loginUser } from "../../redux/userSlice";
+import {useDispatch, useSelector} from "react-redux";
+import axios from "axios";
 
 function Register() {
     const navigator = useNavigate();
+    const dispatch = useDispatch()
+
     const [fullname, setFullname] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -15,6 +21,14 @@ function Register() {
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [repeatPasswordError, setRepeatPasswordError] = useState('');
+
+    const user = useSelector(state => state.user.currentUser)
+
+    useEffect(() => {
+        if (user !== null){
+            navigator('/')
+        }
+    }, [navigator, user]);
 
     const changeFullname = (event) => {
         setFullname(event.target.value);
@@ -59,7 +73,17 @@ function Register() {
             setRepeatPasswordError('Passwords do not match');
         }
         else {
-            // TODO: Add new user to database
+            axios.post(`${baseURL}register/`, {
+                name: fullname,
+                username: username,
+                password: password
+            }).then((response) => {
+                localStorage.setItem('accessToken', response.data.access);
+                localStorage.setItem('refreshToken', response.data.refresh);
+                const user = response.data.user;
+                dispatch(loginUser({user}))
+                navigator('/');
+            });
         }
     }
 

@@ -1,11 +1,15 @@
 import './Navbar.css';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import AccountCircle from  "../../Icons/account_circle.svg"
 import Logout from "../../Icons/logout.svg"
 import HomeIcon from "../../Icons/home.svg"
+import {useDispatch} from "react-redux";
+import {logoutUser} from "../../redux/userSlice";
 
 function Navbar({ page }) {
     let homeIcon = null;
+    const dispatch = useDispatch();
+    const navigator = useNavigate();
 
     if (page === "home") {
         homeIcon = (<img src={AccountCircle} alt="Profile"/>)
@@ -21,10 +25,14 @@ function Navbar({ page }) {
                 {homeIcon}
             </Link>
             <h1>User Management System</h1>
-            <Link to={'/'}>
-                {/*TODO: Add logout functionality */}
-                <img src={Logout} alt="Logout"/>
-            </Link>
+            <img
+                onClick={() => {
+                    dispatch(logoutUser())
+                    navigator('/login')
+                }}
+                src={Logout}
+                alt="Logout"
+            />
         </header>
     );
 }

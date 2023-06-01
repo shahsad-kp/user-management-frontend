@@ -4,17 +4,34 @@ import UserCard from "../UserCard/UserCard";
 import person_add_icon from '../../Icons/person_add.svg'
 import {useNavigate} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchUsers} from "../../redux/usersSlice";
+import axiosInstance from "../../api/api";
+import {setUsers} from "../../redux/usersSlice";
 
 function UsersList() {
     const navigator = useNavigate();
     const dispatch = useDispatch();
 
     const users = useSelector(state => state.users.users);
+    const user = useSelector(state => state.user.currentUser);
 
     useEffect(() => {
-        dispatch(fetchUsers());
-    }, []);
+        if (user && user.isAdmin) {
+            axiosInstance.get(
+                `get-all-users/`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                    }
+                },
+            ).then(response => {
+                dispatch(setUsers(response.data));
+            }).catch(error => {
+                console.log(error);
+            })
+        } else {
+            navigator('/')
+        }
+    }, [user, navigator, dispatch]);
 
 
     return (

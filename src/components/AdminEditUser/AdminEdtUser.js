@@ -1,9 +1,10 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import * as React from "react";
 import './AdminEditUser.css';
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {addUser, editUser} from "../../redux/usersSlice";
 import {useNavigate} from "react-router-dom";
+import axiosInstance from "../../api/api";
 
 function AdminEditUser({page, user}) {
     const [profilePicture, setProfilePicture] = useState(null);
@@ -13,6 +14,16 @@ function AdminEditUser({page, user}) {
     const [fullnameError, setFullnameError] = useState('');
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+
+    const dispatch = useDispatch();
+    const navigator = useNavigate();
+    const loggedUser = useSelector(state => state.user.currentUser)
+
+    useEffect(() => {
+        if (loggedUser === null) {
+            navigator('/login')
+        }
+    }, [loggedUser, navigator]);
 
     const changeFullname = (event) => {
         setFullname(event.target.value);
@@ -33,12 +44,10 @@ function AdminEditUser({page, user}) {
         setPasswordError('');
     }
 
-    const dispatch = useDispatch();
-    const navigator = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (fullname.trim() === '' || username.trim() === '' || password.trim() === '') {
+        if (fullname.trim() === '' || username.trim() === '' || (password.trim() === '' && page === 'add')) {
             if (fullname.trim() === '') {
                 setFullnameError('Fullname is required');
             }
@@ -48,36 +57,44 @@ function AdminEditUser({page, user}) {
             if (password.trim() === '' && page === 'add') {
                 setPasswordError('Password is required');
             }
+            console.log('empty')
         } else {
             if (page === 'add') {
-                user = {
-                    id: Date.now(),
-                    name: fullname,
-                    username: username,
-                    password: password,
-                    profilePicture: profilePicture
-                }
-                dispatch(addUser(user));
+                console.log('adding')
+                axiosInstance.put('add-user/', {
+                    name: fullname, username: username, password: password,
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                    }
+                },).then(response => {
+                    dispatch(addUser(response.data));
+                    navigator('/admin')
+                }).catch(error => {
+                    console.log(error);
+                })
             } else {
-                user = {
-                    id: user.id,
-                    name: fullname,
-                    username: username,
-                    password: password,
-                    profilePicture: profilePicture
-                }
-                dispatch(editUser(user));
+                console.log('editiing')
+                axiosInstance.put('edit-user/', {
+                    id: user.id, name: fullname, username: username, password: password,
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                    }
+                },).then(response => {
+                    dispatch(editUser(response.data));
+                    navigator('/admin')
+                }).catch(error => {
+                    alert(error.response.data.detail)
+                })
             }
-            navigator('/admin')
-            // TODO: Add new user to database or edit user
         }
     }
 
-    return (
-        <div className={'add-user'}>
+    return (<div className={'add-user'}>
             <form>
                 <div className={'form'}>
-                    <h1>{page === 'edit' ? 'Edit user': 'Add new user'}</h1>
+                    <h1>{page === 'edit' ? 'Edit user' : 'Add new user'}</h1>
                     <input
                         type="file"
                         id="profile-picture"
@@ -85,7 +102,7 @@ function AdminEditUser({page, user}) {
                         onChange={event => setProfilePicture(event.target.files[0])}
                     />
                     <img
-                        src={profilePicture? URL.createObjectURL(profilePicture) : 'https://www.w3schools.com/howto/img_avatar.png'}
+                        src={profilePicture ? URL.createObjectURL(profilePicture) : 'https://www.w3schools.com/howto/img_avatar.png'}
                         alt={'Profile'}
                         onClick={() => document.getElementById('profile-picture').click()}
                     />
@@ -118,11 +135,13 @@ function AdminEditUser({page, user}) {
                     {passwordError && <p className={'error-message'}>{passwordError}</p>}
                 </div>
                 <div className={'buttons'}>
-                    <button type="submit" onClick={handleSubmit}>{page === 'edit' ? 'Update user' : 'Add New User'}</button>
+                    <button
+                        type="submit"
+                        onClick={handleSubmit}
+                    >{page === 'edit' ? 'Update user' : 'Add New User'}</button>
                 </div>
             </form>
-        </div>
-    );
+        </div>);
 }
 
 export default AdminEditUser;

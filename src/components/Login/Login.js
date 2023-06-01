@@ -1,11 +1,17 @@
 import * as React from 'react';
 import "./Login.css"
 import {useNavigate} from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {loginUser} from "../../redux/userSlice";
+import axios from "axios";
+import {baseURL} from "../../api/api";
 
 
 function Login() {
     const navigator = useNavigate();
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.currentUser);
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -24,9 +30,36 @@ function Login() {
             }
 
         } else {
-            // TODO: Login
+            axios.post(
+                `${baseURL}login/`,
+                {
+                    username,
+                    password
+                }
+            ).then((response) => {
+                const user = response.data.user;
+                localStorage.setItem('accessToken', response.data.access)
+                localStorage.setItem('refreshToken', response.data.refresh)
+                dispatch(loginUser({user}));
+                navigator('/');
+            }).catch((error) => {
+                if (error.response.status === 400){
+                    setPasswordError('Username or password is incorrect');
+                    setPassword('');
+                }
+                else{
+                    setPasswordError('Something went wrong')
+                }
+            })
         }
     }
+
+    useEffect(() => {
+        if (user !== null) {
+            navigator('/');
+        }
+    }, [user, navigator]);
+
 
     const updateUsername = (event) => {
         setUsername(event.target.value);

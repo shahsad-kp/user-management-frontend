@@ -1,8 +1,9 @@
 import * as React from 'react';
 import "./UserProfile.css"
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {updateUser} from "../../redux/userSlice";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {useNavigate} from "react-router-dom";
 
 function UserProfile() {
     const [profilePicture, setProfilePicture] = useState(null);
@@ -15,14 +16,23 @@ function UserProfile() {
     const [usernameError, setUsernameError] = useState('');
     const [repeatPasswordError, setRepeatPasswordError] = useState('');
 
+    const navigator = useNavigate()
     const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.currentUser)
+
+    useEffect(() => {
+        if (user == null) {
+            navigator('/login/')
+        }
+    }, [user, navigator]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
         if (password !== repeatPassword) {
             setRepeatPasswordError('Passwords do not match');
-        }
-        else{
+        } else {
+
+            // TODO: Update user
             dispatch(updateUser(fullname, username, password, profilePicture));
         }
     }
@@ -31,8 +41,7 @@ function UserProfile() {
         setRepeatPassword(event.target.value);
         if (password !== event.target.value) {
             setRepeatPasswordError('Passwords do not match');
-        }
-        else{
+        } else {
             setRepeatPasswordError('');
         }
     }
@@ -41,8 +50,7 @@ function UserProfile() {
         setPassword(event.target.value);
         if (repeatPassword !== event.target.value) {
             setRepeatPasswordError('Passwords do not match');
-        }
-        else{
+        } else {
             setRepeatPasswordError('');
         }
     }
@@ -51,14 +59,12 @@ function UserProfile() {
         setUsername(event.target.value);
         if (event.target.value !== '' && event.target.value.length < 5) {
             setUsernameError('Username must be at least 5 characters long');
-        }
-        else{
+        } else {
             setUsernameError('');
         }
     }
 
-    return (
-        <div className={'update-profile'}>
+    return (<div className={'update-profile'}>
             <form>
                 <div className={'form'}>
                     <h1>Update Profile</h1>
@@ -69,7 +75,7 @@ function UserProfile() {
                         onChange={event => setProfilePicture(event.target.files[0])}
                     />
                     <img
-                        src={profilePicture? URL.createObjectURL(profilePicture) : 'https://www.w3schools.com/howto/img_avatar.png'}
+                        src={profilePicture ? URL.createObjectURL(profilePicture) : 'https://www.w3schools.com/howto/img_avatar.png'}
                         alt={'Profile'}
                         onClick={() => document.getElementById('profile-picture').click()}
                     />
@@ -110,8 +116,7 @@ function UserProfile() {
                     <button type="submit" onClick={handleSubmit}>Update Profile</button>
                 </div>
             </form>
-        </div>
-    );
+        </div>);
 }
 
 export default UserProfile;
