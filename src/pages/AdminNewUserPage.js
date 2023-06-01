@@ -4,8 +4,8 @@ import {Fragment} from "react";
 function AdminNewUserPage() {
     return (
         <Fragment>
-            <Navbar page={'home'}/>
-            <AdminEditUser page={'new'}/>
+            <Navbar page={'new'}/>
+            <AdminEditUser page={'add'}/>
         </Fragment>
     );
 }

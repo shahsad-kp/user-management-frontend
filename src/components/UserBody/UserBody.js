@@ -1,12 +1,12 @@
 import './UserBody.css'
+import {useSelector} from "react-redux";
 
 function UserBody() {
-    let username = 'Shahsad'
-    // TODO: Get username from context
+    const user = useSelector(state => state.user.currentUser);
 
     return (
         <div className={'user-body'}>
-            <h1>Welcome {username}</h1>
+            <h1>Welcome {user.name}</h1>
         </div>
     );
 }

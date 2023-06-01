@@ -5,15 +5,20 @@ import Logout from "../../Icons/logout.svg"
 import HomeIcon from "../../Icons/home.svg"
 
 function Navbar({ page }) {
+    let homeIcon = null;
+
+    if (page === "home") {
+        homeIcon = (<img src={AccountCircle} alt="Profile"/>)
+    } else if (page === "edit") {
+        homeIcon = (<img src={HomeIcon} alt="HomeIcon"/>)
+    } else {
+        homeIcon = (<i></i>)
+    }
+
     return (
         <header>
             <Link to={ page === "home" ? '/profile/' : '/'}>
-                {
-                    page === "home" ?
-                        <img src={AccountCircle} alt="Profile"/>
-                        :
-                        <img src={HomeIcon} alt="HomeIcon"/>
-                }
+                {homeIcon}
             </Link>
             <h1>User Management System</h1>
             <Link to={'/'}>

@@ -13,7 +13,17 @@ const userSlice = createSlice({
         },
         logoutUser(state) {
             state.currentUser = null;
-        },
+        }
+    },
+    extraReducers: {
+        ['users/editUser']: (state, action) => {
+            const {id, name, username, profilePicture} = action.payload;
+            if (state.currentUser.id === id) {
+                state.currentUser.name = name;
+                state.currentUser.username = username;
+                state.currentUser.profilePicture = profilePicture;
+            }
+        }
     }
 })
 

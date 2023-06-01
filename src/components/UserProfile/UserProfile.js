@@ -1,6 +1,8 @@
 import * as React from 'react';
 import "./UserProfile.css"
 import {useState} from "react";
+import {updateUser} from "../../redux/userSlice";
+import {useDispatch} from "react-redux";
 
 function UserProfile() {
     const [profilePicture, setProfilePicture] = useState(null);
@@ -13,13 +15,16 @@ function UserProfile() {
     const [usernameError, setUsernameError] = useState('');
     const [repeatPasswordError, setRepeatPasswordError] = useState('');
 
+    const dispatch = useDispatch();
+
     const handleSubmit = (event) => {
         event.preventDefault();
         if (password !== repeatPassword) {
             setRepeatPasswordError('Passwords do not match');
         }
-
-        // TODO: Add update profile functionality
+        else{
+            dispatch(updateUser(fullname, username, password, profilePicture));
+        }
     }
 
     const updateRepeatPassword = (event) => {

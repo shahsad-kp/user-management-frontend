@@ -1,12 +1,15 @@
 import {useState} from "react";
 import * as React from "react";
 import './AdminEditUser.css';
+import {useDispatch} from "react-redux";
+import {addUser, editUser} from "../../redux/usersSlice";
+import {useNavigate} from "react-router-dom";
 
 function AdminEditUser({page, user}) {
     const [profilePicture, setProfilePicture] = useState(null);
-    const [fullname, setFullname] = useState(page === 'edit' ? user.fullName : '');
+    const [fullname, setFullname] = useState(page === 'edit' ? user.name : '');
     const [username, setUsername] = useState(page === 'edit' ? user.username : '');
-    const [password, setPassword] = useState(page === 'edit' ? user.password : '');
+    const [password, setPassword] = useState('');
     const [fullnameError, setFullnameError] = useState('');
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
@@ -30,6 +33,9 @@ function AdminEditUser({page, user}) {
         setPasswordError('');
     }
 
+    const dispatch = useDispatch();
+    const navigator = useNavigate();
+
     const handleSubmit = (event) => {
         event.preventDefault();
         if (fullname.trim() === '' || username.trim() === '' || password.trim() === '') {
@@ -39,11 +45,30 @@ function AdminEditUser({page, user}) {
             if (username.trim() === '') {
                 setUsernameError('Username is required');
             }
-            if (password.trim() === '') {
+            if (password.trim() === '' && page === 'add') {
                 setPasswordError('Password is required');
             }
-
         } else {
+            if (page === 'add') {
+                user = {
+                    id: Date.now(),
+                    name: fullname,
+                    username: username,
+                    password: password,
+                    profilePicture: profilePicture
+                }
+                dispatch(addUser(user));
+            } else {
+                user = {
+                    id: user.id,
+                    name: fullname,
+                    username: username,
+                    password: password,
+                    profilePicture: profilePicture
+                }
+                dispatch(editUser(user));
+            }
+            navigator('/admin')
             // TODO: Add new user to database or edit user
         }
     }
@@ -52,7 +77,7 @@ function AdminEditUser({page, user}) {
         <div className={'add-user'}>
             <form>
                 <div className={'form'}>
-                    <h1>Add new user</h1>
+                    <h1>{page === 'edit' ? 'Edit user': 'Add new user'}</h1>
                     <input
                         type="file"
                         id="profile-picture"
@@ -93,7 +118,7 @@ function AdminEditUser({page, user}) {
                     {passwordError && <p className={'error-message'}>{passwordError}</p>}
                 </div>
                 <div className={'buttons'}>
-                    <button type="submit" onClick={handleSubmit}>Add New User</button>
+                    <button type="submit" onClick={handleSubmit}>{page === 'edit' ? 'Update user' : 'Add New User'}</button>
                 </div>
             </form>
         </div>
