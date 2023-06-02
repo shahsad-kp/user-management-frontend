@@ -3,12 +3,10 @@ import axios from 'axios';
 const baseURL = 'http://localhost:8000/api/';
 const imageBaseUrl = 'http://localhost:8000'
 
-// Create an instance of Axios with a base URL
 const axiosInstance = axios.create({
-    baseURL: baseURL, // Replace with your API base URL
+    baseURL: baseURL,
 });
 
-// Add an interceptor to set the Authorization header with the access token
 axiosInstance.interceptors.request.use((config) => {
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
@@ -17,7 +15,6 @@ axiosInstance.interceptors.request.use((config) => {
     return config;
 });
 
-// Add an interceptor for token refresh
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
@@ -44,7 +41,6 @@ axiosInstance.interceptors.response.use(
                 });
         }
 
-        // Return any other error as-is
         return Promise.reject(error);
     }
 );
