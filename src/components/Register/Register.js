@@ -73,7 +73,7 @@ function Register() {
             setRepeatPasswordError('Passwords do not match');
         }
         else {
-            axios.post(`${baseURL}register/`, {
+            axios.post(`${baseURL}users/register/`, {
                 name: fullname,
                 username: username,
                 password: password
@@ -83,6 +83,12 @@ function Register() {
                 const user = response.data.user;
                 dispatch(loginUser({user}))
                 navigator('/');
+            }).catch((error) =>{
+                if (error.code === 'ERR_BAD_REQUEST'){
+                    setUsernameError(error.response.data.username ? error.response.data.username : '')
+                    setPasswordError(error.response.data.password ? error.response.data.password : '')
+                    setFullnameError(error.response.data.name ? error.response.data.name : '')
+                }
             });
         }
     }

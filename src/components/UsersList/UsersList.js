@@ -16,18 +16,13 @@ function UsersList() {
 
     useEffect(() => {
         if (user && user.isAdmin) {
-            axiosInstance.get(
-                `get-all-users/`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                    }
-                },
-            ).then(response => {
-                dispatch(setUsers(response.data));
-            }).catch(error => {
-                console.log(error);
-            })
+        axiosInstance.get(
+            `users/`
+        ).then(response => {
+            dispatch(setUsers(response.data));
+        }).catch(error => {
+            console.log(error);
+        })
         } else {
             navigator('/')
         }
@@ -36,7 +31,6 @@ function UsersList() {
 
     return (
         <div className={'users-list-body'}>
-            <h1>Users</h1>
             <div className={'users-list'}>
                 <div className={'new-user'} onClick={() => navigator('new-user')}>
                     <img src={person_add_icon} alt={'Add new user'}/>

@@ -60,88 +60,89 @@ function AdminEditUser({page, user}) {
             console.log('empty')
         } else {
             if (page === 'add') {
-                console.log('adding')
-                axiosInstance.put('add-user/', {
-                    name: fullname, username: username, password: password,
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                axiosInstance.post(
+                    '/users/create/',
+                    {
+                        name: fullname,
+                        username: username,
+                        password: password,
                     }
-                },).then(response => {
+                ).then(response => {
                     dispatch(addUser(response.data));
                     navigator('/admin')
                 }).catch(error => {
                     console.log(error);
                 })
             } else {
-                console.log('editiing')
-                axiosInstance.put('edit-user/', {
-                    id: user.id, name: fullname, username: username, password: password,
-                }, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-                    }
-                },).then(response => {
+                axiosInstance.put(
+                    `/users/update/${user.id}/`,
+                    {
+                        id: user.id,
+                        name: fullname,
+                        username: username,
+                        password: password,
+                    },
+                ).then(response => {
                     dispatch(editUser(response.data));
                     navigator('/admin')
                 }).catch(error => {
-                    alert(error.response.data.detail)
+                    console.log(error)
                 })
             }
         }
     }
 
     return (<div className={'add-user'}>
-            <form>
-                <div className={'form'}>
-                    <h1>{page === 'edit' ? 'Edit user' : 'Add new user'}</h1>
-                    <input
-                        type="file"
-                        id="profile-picture"
-                        accept="image/png, image/jpeg"
-                        onChange={event => setProfilePicture(event.target.files[0])}
-                    />
-                    <img
-                        src={profilePicture ? URL.createObjectURL(profilePicture) : 'https://www.w3schools.com/howto/img_avatar.png'}
-                        alt={'Profile'}
-                        onClick={() => document.getElementById('profile-picture').click()}
-                    />
-                    <input
-                        type="text"
-                        id="fullname"
-                        placeholder={'FULL NAME'}
-                        value={fullname}
-                        onChange={changeFullname}
-                        className={fullnameError ? 'error' : ''}
-                    />
-                    {fullnameError && <p className={'error-message'}>{fullnameError}</p>}
-                    <input
-                        type="text"
-                        id="username"
-                        placeholder={'USERNAME'}
-                        value={username}
-                        onChange={changeUsername}
-                        className={usernameError ? 'error' : ''}
-                    />
-                    {usernameError && <p className={'error-message'}>{usernameError}</p>}
-                    <input
-                        type="password"
-                        id="password"
-                        placeholder={'PASSWORD'}
-                        value={password}
-                        onChange={changePassword}
-                        className={passwordError ? 'error' : ''}
-                    />
-                    {passwordError && <p className={'error-message'}>{passwordError}</p>}
-                </div>
-                <div className={'buttons'}>
-                    <button
-                        type="submit"
-                        onClick={handleSubmit}
-                    >{page === 'edit' ? 'Update user' : 'Add New User'}</button>
-                </div>
-            </form>
-        </div>);
+        <form>
+            <div className={'form'}>
+                <h1>{page === 'edit' ? 'Edit user' : 'Add new user'}</h1>
+                <input
+                    type="file"
+                    id="profile-picture"
+                    accept="image/png, image/jpeg"
+                    onChange={event => setProfilePicture(event.target.files[0])}
+                />
+                <img
+                    src={profilePicture ? URL.createObjectURL(profilePicture) : 'https://www.w3schools.com/howto/img_avatar.png'}
+                    alt={'Profile'}
+                    onClick={() => document.getElementById('profile-picture').click()}
+                />
+                <input
+                    type="text"
+                    id="fullname"
+                    placeholder={'FULL NAME'}
+                    value={fullname}
+                    onChange={changeFullname}
+                    className={fullnameError ? 'error' : ''}
+                />
+                {fullnameError && <p className={'error-message'}>{fullnameError}</p>}
+                <input
+                    type="text"
+                    id="username"
+                    placeholder={'USERNAME'}
+                    value={username}
+                    onChange={changeUsername}
+                    className={usernameError ? 'error' : ''}
+                />
+                {usernameError && <p className={'error-message'}>{usernameError}</p>}
+                <input
+                    type="password"
+                    id="password"
+                    placeholder={'PASSWORD'}
+                    value={password}
+                    onChange={changePassword}
+                    className={passwordError ? 'error' : ''}
+                />
+                {passwordError && <p className={'error-message'}>{passwordError}</p>}
+            </div>
+            <div className={'buttons'}>
+                <button
+                    type="submit"
+                    onClick={handleSubmit}
+                >{page === 'edit' ? 'Update user' : 'Add New User'}</button>
+            </div>
+        </form>
+    </div>);
 }
 
 export default AdminEditUser;

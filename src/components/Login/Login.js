@@ -31,7 +31,7 @@ function Login() {
 
         } else {
             axios.post(
-                `${baseURL}login/`,
+                `${baseURL}users/login/`,
                 {
                     username,
                     password
@@ -40,10 +40,11 @@ function Login() {
                 const user = response.data.user;
                 localStorage.setItem('accessToken', response.data.access)
                 localStorage.setItem('refreshToken', response.data.refresh)
+                console.log(response.data)
                 dispatch(loginUser({user}));
                 navigator('/');
             }).catch((error) => {
-                if (error.response.status === 400){
+                if (error.code === 'ERR_BAD_REQUEST'){
                     setPasswordError('Username or password is incorrect');
                     setPassword('');
                 }
