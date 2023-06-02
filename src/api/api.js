@@ -20,11 +20,11 @@ axiosInstance.interceptors.response.use(
     (error) => {
         const originalRequest = error.config;
 
-        if (error.response.status === 401 && !originalRequest._retry) {
+        if (error.response.status === 403 && !originalRequest._retry) {
             originalRequest._retry = true;
 
             return axiosInstance
-                .post('api/token/refresh/', {refresh: localStorage.getItem('refreshToken')})
+                .post('token/refresh/', {refresh: localStorage.getItem('refreshToken')})
                 .then((res) => {
                     const {accessToken, refreshToken} = res.data;
 
