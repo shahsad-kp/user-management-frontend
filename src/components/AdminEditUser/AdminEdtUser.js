@@ -2,15 +2,17 @@ import {useEffect, useState} from "react";
 import * as React from "react";
 import './AdminEditUser.css';
 import {useDispatch, useSelector} from "react-redux";
-import {addUser, editUser} from "../../redux/usersSlice";
+import {addUser} from "../../redux/usersSlice";
 import {useNavigate} from "react-router-dom";
 import axiosInstance from "../../api/api";
+import {updateUser} from "../../redux/userSlice";
 
 function AdminEditUser({page, user}) {
     const [profilePicture, setProfilePicture] = useState(null);
     const [fullname, setFullname] = useState(page === 'edit' ? user.name : '');
     const [username, setUsername] = useState(page === 'edit' ? user.username : '');
     const [password, setPassword] = useState('');
+
     const [fullnameError, setFullnameError] = useState('');
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
@@ -47,7 +49,10 @@ function AdminEditUser({page, user}) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (fullname.trim() === '' || username.trim() === '' || (password.trim() === '' && page === 'add')) {
+        if ((fullname.trim() === '' || username.trim() === '' || (password.trim() === '' && page === 'add'))) {
+            // if (profilePicture === null) {
+            //     setImageError('Profile Picture is required')
+            // }
             if (fullname.trim() === '') {
                 setFullnameError('Fullname is required');
             }
@@ -74,18 +79,22 @@ function AdminEditUser({page, user}) {
                     console.log(error);
                 })
             } else {
+                const formData = new FormData()
+                formData.append('id', user.id)
+                formData.append('name', fullname);
+                formData.append('username', username);
+                formData.append('password', password);
+                formData.append('profilePicture', profilePicture)
                 axiosInstance.put(
                     `/users/update/${user.id}/`,
-                    {
-                        id: user.id,
-                        name: fullname,
-                        username: username,
-                        password: password,
-                    },
+                    formData
                 ).then(response => {
-                    dispatch(editUser(response.data));
+                    dispatch(updateUser(response.data));
                     navigator('/admin')
                 }).catch(error => {
+                    if (error.details) {
+                        alert(error.details)
+                    }
                     console.log(error)
                 })
             }

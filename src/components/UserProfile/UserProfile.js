@@ -3,23 +3,23 @@ import "./UserProfile.css"
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
-import axiosInstance from "../../api/api";
+import axiosInstance, {imageBaseUrl} from "../../api/api";
 import {editUser} from "../../redux/usersSlice";
 
 function UserProfile() {
+    const navigator = useNavigate()
+    const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.currentUser)
+
     const [profilePicture, setProfilePicture] = useState(null);
-    const [fullname, setFullname] = useState('');
-    const [username, setUsername] = useState('');
+    const [fullname, setFullname] = useState(user.name);
+    const [username, setUsername] = useState(user.username);
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
 
 
     const [usernameError, setUsernameError] = useState('');
     const [repeatPasswordError, setRepeatPasswordError] = useState('');
-
-    const navigator = useNavigate()
-    const dispatch = useDispatch();
-    const user = useSelector((state) => state.user.currentUser)
 
     useEffect(() => {
         if (user == null) {
@@ -43,9 +43,12 @@ function UserProfile() {
                 formData
             ).then(response => {
                 dispatch(editUser(response.data));
-                navigator('/admin')
+                navigator('/')
             }).catch(error => {
-                console.log(localStorage.getItem('accessToken'))
+                if (error.details){
+                    alert(error.details)
+                }
+                console.log(error)
             })
         }
     }
@@ -88,7 +91,7 @@ function UserProfile() {
                     onChange={event => setProfilePicture(event.target.files[0])}
                 />
                 <img
-                    src={profilePicture ? URL.createObjectURL(profilePicture) : 'https://www.w3schools.com/howto/img_avatar.png'}
+                    src={profilePicture ? URL.createObjectURL(profilePicture) : (user.profilePicture ? imageBaseUrl + user.profilePicture : 'https://www.w3schools.com/howto/img_avatar.png')}
                     alt={'Profile'}
                     onClick={() => document.getElementById('profile-picture').click()}
                 />
